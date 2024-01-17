@@ -15,11 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.harmony2.Model.ToDoModel;
 import com.example.harmony2.NewTask;
 import com.example.harmony2.R;
+import com.example.harmony2.RoutineFragment;
 import com.example.harmony2.ToDo;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
-
+//inanç
 public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.MyViewHolder> {
 
     private List<ToDoModel> toDoList;

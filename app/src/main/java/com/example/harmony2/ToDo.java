@@ -24,10 +24,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+//onur
 public class ToDo extends AppCompatActivity implements OnDialogCloseListener{
 
     //t = this
+    //onur
     private RecyclerView tRV;
     private FloatingActionButton tFAB;
     private FirebaseFirestore firestore;

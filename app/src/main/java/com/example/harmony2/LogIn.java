@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LogIn extends AppCompatActivity {
-
+//onur
     EditText email, password;
     FirebaseAuth mAuth;
 
@@ -69,7 +69,7 @@ public class LogIn extends AppCompatActivity {
                         });
             }
         });
-
+        //inanç
         TextView createAccount = findViewById(R.id.textCreateAccount);
         createAccount.setOnClickListener(new View.OnClickListener() {
             @Override

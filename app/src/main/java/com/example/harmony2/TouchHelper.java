@@ -14,7 +14,7 @@ import com.example.harmony2.Adapter.ToDoAdapter;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-
+//inanç
 public class TouchHelper extends ItemTouchHelper.SimpleCallback {
     private ToDoAdapter adapter;
 

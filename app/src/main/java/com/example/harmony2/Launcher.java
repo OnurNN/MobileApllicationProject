@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-
+//inanç
 public class Launcher extends AppCompatActivity {
 
     @Override
