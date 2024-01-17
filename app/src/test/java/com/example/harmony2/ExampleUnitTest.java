@@ -14,4 +14,12 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
+
+    @Test
+    public void testPasswordMismatch() {
+        String password = "onur1";
+        String confirmPassword = "ozgurhoca2";
+        boolean result = PasswordValidator.matching(password, confirmPassword);
+        assertFalse(result);
+    }
 }

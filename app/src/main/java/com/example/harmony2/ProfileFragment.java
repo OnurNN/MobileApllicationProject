@@ -24,23 +24,16 @@ import com.google.firebase.database.ValueEventListener;
 //ali inanç
 public class ProfileFragment extends Fragment {
 
-    private Button btn;
+    private Button updateBtn;
     private DatabaseReference userRef;
     private FirebaseAuth firebaseAuth;
     private String CurrentUserID;
-
-
-    public ProfileFragment() {
-        // Required empty public constructor
-    }
-
 
 
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -54,13 +47,13 @@ public class ProfileFragment extends Fragment {
         final TextView phoneTextView = view.findViewById(R.id.profilePhoneTextView);
 
 
-        btn = view.findViewById(R.id.asd);
-        btn.setOnClickListener(new View.OnClickListener() {
+        updateBtn = view.findViewById(R.id.updateProfile);
+        updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EditProfileFragment epf = new EditProfileFragment();
                 FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.qwe, epf);
+                transaction.replace(R.id.profileContainer, epf);
                 transaction.addToBackStack(null);  // Optional: Adds the transaction to the back stack
                 transaction.commit();
             }

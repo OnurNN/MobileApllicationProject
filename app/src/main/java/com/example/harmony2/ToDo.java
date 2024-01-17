@@ -1,14 +1,14 @@
 package com.example.harmony2;
 
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.view.View;
 
 import com.example.harmony2.Adapter.ToDoAdapter;
 import com.example.harmony2.Model.ToDoModel;
@@ -22,7 +22,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 //onur
 public class ToDo extends AppCompatActivity implements OnDialogCloseListener{

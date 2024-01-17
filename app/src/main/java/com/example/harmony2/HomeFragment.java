@@ -67,11 +67,9 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         motivationalSentence = view.findViewById(R.id.motivationalSentence);
 
-        // Initialize your list of motivational sentences
         sentences = new ArrayList<>();
         sentences.add("Believe in yourself and all that you are.");
         sentences.add("Dream big, work hard, stay focused.");
@@ -83,22 +81,17 @@ public class HomeFragment extends Fragment {
         sentences.add("I'm possible");
         sentences.add("Stay true to yourself.");
 
-        // Add more sentences as needed
-
-        // Initialize handler and runnable for updating sentences
         handler = new Handler();
         updateSentenceRunnable = new Runnable() {
             @Override
             public void run() {
                 fadeOutAndChangeSentence();
-                handler.postDelayed(this, 5000); // Repeat after 10 seconds
+                handler.postDelayed(this, 5000);
             }
         };
 
-        // Start updating sentences
         handler.postDelayed(updateSentenceRunnable, 5000);
 
-        // Show the initial sentence immediately
         updateMotivationalSentence();
 
         return view;
@@ -106,7 +99,7 @@ public class HomeFragment extends Fragment {
 
     private void fadeOutAndChangeSentence() {
         ObjectAnimator fadeOut = ObjectAnimator.ofFloat(motivationalSentence, "alpha", 1f, 0f);
-        fadeOut.setDuration(1000); // 1 second duration for fading out
+        fadeOut.setDuration(1000);
 
         fadeOut.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -121,7 +114,7 @@ public class HomeFragment extends Fragment {
             public void onAnimationEnd(android.animation.Animator animation) {
                 super.onAnimationEnd(animation);
                 updateMotivationalSentence();
-                fadeIn(); // Fade in the new sentence
+                fadeIn();
             }
         });
 
@@ -130,24 +123,20 @@ public class HomeFragment extends Fragment {
 
     private void fadeIn() {
         ObjectAnimator fadeIn = ObjectAnimator.ofFloat(motivationalSentence, "alpha", 0f, 1f);
-        fadeIn.setDuration(1000); // 1 second duration for fading in
+        fadeIn.setDuration(1000);
         fadeIn.start();
     }
 
     private void updateMotivationalSentence() {
-        // Choose a random sentence from the list
         Random random = new Random();
         int index = random.nextInt(sentences.size());
         String newSentence = sentences.get(index);
-
-        // Update the TextView
         motivationalSentence.setText(newSentence);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Stop the handler when the fragment is destroyed to prevent memory leaks
         handler.removeCallbacks(updateSentenceRunnable);
     }
 }

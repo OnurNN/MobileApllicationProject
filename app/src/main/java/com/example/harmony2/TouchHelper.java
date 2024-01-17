@@ -23,6 +23,7 @@ public class TouchHelper extends ItemTouchHelper.SimpleCallback {
         this.adapter = adapter;
     }
 
+
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
         return false;

@@ -1,87 +1,108 @@
 package com.example.harmony2;
 
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.example.harmony2.Adapter.ToDoAdapter;
-import com.example.harmony2.Model.ToDoModel;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RoutineFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RoutineFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private DatabaseReference databaseReference;
+    private String userId;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private EditText taskEditText;
+    private RoutineTaskAdapter taskAdapter;
 
-
-    public RoutineFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RoutineFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RoutineFragment newInstance(String param1, String param2) {
-        RoutineFragment fragment = new RoutineFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_routine, container, false);
 
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user != null) {
+            userId = user.getUid();
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+        }
 
-        return inflater.inflate(R.layout.fragment_routine, container, false);
+        taskEditText = view.findViewById(R.id.editTextTask);
+        Button addButton = view.findViewById(R.id.buttonAdd);
+
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) RecyclerView recyclerView = view.findViewById(R.id.recyclerViewTasks);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        taskAdapter = new RoutineTaskAdapter(databaseReference);
+        recyclerView.setAdapter(taskAdapter);
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(taskAdapter));
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String task = taskEditText.getText().toString().trim();
+                if (!task.isEmpty()) {
+                    addTaskToFirebase(task);
+                    taskEditText.getText().clear();
+                } else {
+                    Toast.makeText(getContext(), "Please enter a task", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        loadTasksFromFirebase();
+
+        return view;
     }
 
+    private void addTaskToFirebase(String task) {
+        String taskKey = databaseReference.child("tasks").push().getKey();
+        if (taskKey != null) {
+            databaseReference.child("tasks").child(taskKey).setValue(new RoutineTask(task, false));
+        }
+    }
+
+    private void loadTasksFromFirebase() {
+        databaseReference.child("tasks").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<RoutineTask> tasks = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    RoutineTask task = snapshot.getValue(RoutineTask.class);
+                    if (task != null) {
+                        task.setKey(snapshot.getKey()); // Set the key
+                        tasks.add(task);
+                    }
+                }
+                taskAdapter.setTasks(tasks);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getContext(), "Failed to load tasks", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
+
