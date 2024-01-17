@@ -1,5 +1,6 @@
 package com.example.harmony2;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,6 +24,7 @@ public class LogIn extends AppCompatActivity {
     FirebaseAuth mAuth;
 
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,16 +34,17 @@ public class LogIn extends AppCompatActivity {
         email = findViewById(R.id.logInEmail);
         password = findViewById(R.id.logInPassword);
 
+
         Button loginButton = findViewById(R.id.btnLogin);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //progressBar.setVisibility(View.VISIBLE);
 
                 String tEmail, tPassword;
                 tEmail = String.valueOf(email.getText());
                 tPassword = String.valueOf(password.getText());
+
 
                 if (TextUtils.isEmpty(tEmail)) {
                     Toast.makeText(LogIn.this,"Email shall not be empty.", Toast.LENGTH_SHORT).show();
